@@ -1,4 +1,4 @@
-import { Request, response, Response } from "express";
+import { Request, Response } from "express";
 import { createUserSchema, loginSchema } from "@repo/backend-common/types";
 import { prisma } from "@repo/prisma/prisma";
 import bcrypt from "bcrypt";
@@ -55,7 +55,7 @@ export const login = async (req: Request, res: Response) => {
     const parsedData = loginSchema.safeParse(req.body);
     if(!parsedData.success){
         const error = parsedData.error.issues;
-        return response.status(403).json({error});
+        return res.status(403).json({error});
     };
 
     const {email, password} = parsedData.data;
@@ -81,7 +81,7 @@ export const login = async (req: Request, res: Response) => {
         const token = jwt.sign({userId: user.id}, JWT_SECRET, {expiresIn: "7d" });
         res.cookie("token", token, {
           httpOnly: true,
-          secure: true,
+          secure: process.env.NODE_ENV === "production",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
         return res.status(201).json({
@@ -98,14 +98,30 @@ export const login = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
     res.clearCookie("token", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-        path: "/"
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
     });
 
     return res.json({
       success: true,
       message: "Logged out successfully",
     });
+};
+
+export const me = async (req: Request, res: Response) => {
+  const currentUser = req.user;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: currentUser
+    }
+  });
+
+  if(!user){
+    return res.status(403).json({ message: "User not Exist" });
+  };
+
+  return res.status(201).json({ user });
 }

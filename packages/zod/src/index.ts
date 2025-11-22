@@ -13,7 +13,7 @@ export const loginSchema = z.object({
 });
 
 export const createRoomSchema = z.object({
-  name: z.string().trim(),
+  slug: z.string().trim(),
   description: z.string().trim(),
 });
 
