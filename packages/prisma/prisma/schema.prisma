@@ -1,0 +1,59 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  name String? 
+  password String
+  avatarUrl String?
+
+  rooms Room[]
+  messages Message[]
+  attachments Attachment[]
+}
+
+model Room {
+  id Int @id @default(autoincrement())
+  slug String @unique
+  description String?
+  createdAt DateTime @default(now())
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+
+  messages Message[]
+  attachments Attachment[]
+}
+
+model Message {
+  id Int @id @default(autoincrement())
+  content String
+  createdAt DateTime @default(now())
+  editedAt DateTime?
+  deleted Boolean? @default(false)
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+
+  roomId Int
+  room Room @relation(fields: [roomId], references: [id])
+}
+
+model Attachment {
+  id Int @id @default(autoincrement())
+  url String?
+  createdAt DateTime @default(now())
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+
+  roomId Int
+  room Room @relation(fields: [roomId], references: [id])
+}
