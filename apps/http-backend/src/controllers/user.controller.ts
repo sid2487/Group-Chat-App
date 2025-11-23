@@ -4,6 +4,7 @@ import { prisma } from "@repo/prisma/prisma";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "@repo/jwt-common/jwt";
+import { WS_SECRET } from "@repo/jwt-ws/ws_secret"
 
 export const register = async (req: Request, res: Response) => {
   const parsedData = createUserSchema.safeParse(req.body);
@@ -38,11 +39,22 @@ export const register = async (req: Request, res: Response) => {
 
     const token = jwt.sign({userId: newUser.id}, JWT_SECRET, {expiresIn: "7d"});
 
+     res.cookie("token", token, {
+       httpOnly: true,
+       secure: process.env.NODE_ENV === "production",
+       maxAge: 7 * 24 * 60 * 60 * 1000,
+     });
+
+     const wsToken = jwt.sign({ userId: newUser.id }, WS_SECRET, {
+       expiresIn: "15m",
+     });
+
     return res.status(201).json({
         success: true,
         message: "User registered Successfully",
         newUser,
-        token
+        token,
+        wsToken
     })
 
   } catch (error) {
@@ -84,11 +96,18 @@ export const login = async (req: Request, res: Response) => {
           secure: process.env.NODE_ENV === "production",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
+
+        const wsToken = jwt.sign({ userId: user.id }, WS_SECRET, {
+          expiresIn: "15m"
+        });
+
+
         return res.status(201).json({
             success: true,
             message: "Logged in Successfully",
             user,
-            token
+            token,
+            wsToken
         })
     } catch (error) {
         console.error(error);

@@ -39,39 +39,6 @@ export const createRoom = async (req: Request, res: Response) => {
   }
 };
 
-export const joinRoom = async (req: Request, res: Response) => {
-  const roomId = Number(req.params.id);
-  const currentUser = req.user;
-
-  if (!currentUser) {
-    return res.status(404).json({ message: "User does not exist" });
-  }
-
-  try {
-    const alreadyJoined = await prisma.roomMember.findFirst({
-      where: {
-        roomId,
-        userId: currentUser,
-      },
-    });
-
-    if (alreadyJoined) {
-      return res.status(201).json({ message: "Already Joined the room" });
-    }
-
-    await prisma.roomMember.create({
-      data: {
-        roomId,
-        userId: currentUser,
-      },
-    });
-
-    return res.status(201).json({ success: true, message: "Joined the Room" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Something went Wrong" });
-  }
-};
 
 export const myRooms = async (req: Request, res: Response) => {
   const userId = req.user;
