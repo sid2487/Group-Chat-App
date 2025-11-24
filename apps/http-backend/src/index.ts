@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from 'express';
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/user.route";
@@ -10,7 +12,7 @@ const app = express();
 
 app.use(
   cors({
-    // origin: "http://localhost:5173", // your frontend origin
+    origin: "http://localhost:3000", // your frontend origin
     credentials: true, // must allow credentials (cookies)
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],

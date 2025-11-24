@@ -16,6 +16,16 @@ export const createRoom = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "User doesnot exist" });
     }
 
+    const exist = await prisma.room.findUnique({
+      where: {
+        slug
+      }
+    });
+
+    if(exist){
+      return res.status(400).json({ message: "Room with the slug already exists"});
+    }
+
     const room = await prisma.room.create({
       data: {
         slug,
@@ -37,6 +47,45 @@ export const createRoom = async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({ message: "Something went Wrong" });
   }
+};
+
+export const joinRoom = async (req: Request, res: Response) => {
+  const currentUser = req.user;
+  const { slug } = req.body;
+
+  if(!currentUser){
+    return;
+  }
+
+  const room = await prisma.room.findUnique({
+    where: {
+      slug,
+    }
+  });
+
+  if(!room) {
+    return res.status(404).json({ message: "Room not Found" });
+  };
+
+  const existing = await prisma.roomMember.findFirst({
+    where: {
+      userId: currentUser,
+      roomId: room.id
+    }
+  });
+
+  if(existing){
+    return res.status(200).json({ message: "Already Joined" });
+  };
+
+  await prisma.roomMember.create({
+    data: {
+      userId: currentUser,
+      roomId: room.id
+    }
+  });
+
+  return res.status(200).json({ message: "Joinied Successfully" });
 };
 
 

@@ -1,4 +1,4 @@
-import { JWT_SECRET } from "@repo/jwt-common/jwt";
+import { HTTP_JWT_SECRET } from "@repo/jwt-common/jwt";
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
@@ -13,7 +13,7 @@ export const authenticate = async (
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, HTTP_JWT_SECRET);
     if (typeof decoded === "string") {
       throw new Error("Invalid token Format");
     }

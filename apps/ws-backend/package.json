@@ -10,11 +10,12 @@
   },
   "dependencies": {
     "@repo/jwt-common": "workspace:*",
+    "@repo/jwt-ws": "workspace:*",
     "@repo/prisma": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@repo/jwt-ws": "workspace:*",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/ws": "^8.18.1",
+    "dotenv": "^17.2.3",
     "jsonwebtoken": "^9.0.2",
     "ws": "^8.18.3"
   },

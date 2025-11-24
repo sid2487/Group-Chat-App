@@ -2,12 +2,25 @@ import { prisma } from "@repo/prisma/prisma";
 import { Request, Response } from "express";
 
 export const getMessages = async (req: Request, res: Response) => {
-    const roomId = Number(req.params.id);
+    // const roomId = Number(req.params.id);
     const currentUser = req.user;
+    const slug = req.params.id;
 
     if(!currentUser){
         return res.status(403).json({ message: "User not Aailable"});
     };
+
+    const room = await prisma.room.findUnique({
+      where: {
+        slug
+      }
+    });
+
+    if(!room){
+      return res.status(404).json({ message: "Room not Found" });
+    };
+
+    const roomId = room.id;
 
     try {
       const member = await prisma.roomMember.findFirst({

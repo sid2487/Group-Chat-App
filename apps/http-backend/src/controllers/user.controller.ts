@@ -3,8 +3,8 @@ import { createUserSchema, loginSchema } from "@repo/backend-common/types";
 import { prisma } from "@repo/prisma/prisma";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "@repo/jwt-common/jwt";
-import { WS_SECRET } from "@repo/jwt-ws/ws_secret"
+import { HTTP_JWT_SECRET } from "@repo/jwt-common/jwt";
+import { WS_JWT_SECRET } from "@repo/jwt-ws/ws_secret"
 
 export const register = async (req: Request, res: Response) => {
   const parsedData = createUserSchema.safeParse(req.body);
@@ -37,7 +37,7 @@ export const register = async (req: Request, res: Response) => {
       },
     });
 
-    const token = jwt.sign({userId: newUser.id}, JWT_SECRET, {expiresIn: "7d"});
+    const token = jwt.sign({userId: newUser.id}, HTTP_JWT_SECRET, {expiresIn: "7d"});
 
      res.cookie("token", token, {
        httpOnly: true,
@@ -45,7 +45,7 @@ export const register = async (req: Request, res: Response) => {
        maxAge: 7 * 24 * 60 * 60 * 1000,
      });
 
-     const wsToken = jwt.sign({ userId: newUser.id }, WS_SECRET, {
+     const wsToken = jwt.sign({ userId: newUser.id }, WS_JWT_SECRET, {
        expiresIn: "15m",
      });
 
@@ -90,14 +90,14 @@ export const login = async (req: Request, res: Response) => {
             return res.status(404).json({ message: "Incorrect Credentials"})
         };
 
-        const token = jwt.sign({userId: user.id}, JWT_SECRET, {expiresIn: "7d" });
+        const token = jwt.sign({userId: user.id}, HTTP_JWT_SECRET, {expiresIn: "7d" });
         res.cookie("token", token, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
-        const wsToken = jwt.sign({ userId: user.id }, WS_SECRET, {
+        const wsToken = jwt.sign({ userId: user.id }, WS_JWT_SECRET, {
           expiresIn: "15m"
         });
 

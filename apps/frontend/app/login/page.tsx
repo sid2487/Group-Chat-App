@@ -1,8 +1,9 @@
-"use client"
+"use client";
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { BACKEND_URL } from "@/config";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,27 +18,24 @@ export default function Login() {
     setError(null);
 
     try {
-        const res = await axios.post(`${BACKEND_URL}/user/login`, {
-          email,
-          password,
-        });
+      const res = await axios.post(
+        `${BACKEND_URL}/user/login`,
+        { email, password },
+        { withCredentials: true }
+      );
 
-        const wsToken = res.data.wsToken;
-        localStorage.setItem("wsToken", wsToken);
+      const wsToken = res.data.wsToken;
+      localStorage.setItem("wsToken", wsToken);
 
-        if(res.status === 201){
-            router.push("/rooms");
-        }
+      if (res.status === 201) {
+        router.push("/rooms");
+      }
     } catch (error: any) {
-        console.error(error.response?.data?.message);
-        setError(error.response?.data?.message || "Something went wrong");
-
-    } finally{
-        setLoading(false);
+      console.error(error.response?.data?.message);
+      setError(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
-
-    
-    
   };
 
   return (
@@ -48,7 +46,6 @@ export default function Login() {
         </h1>
 
         <form onSubmit={handleLogin} className="space-y-5">
-         
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
               Email
@@ -63,7 +60,6 @@ export default function Login() {
             />
           </div>
 
-          
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
               Password
@@ -78,10 +74,8 @@ export default function Login() {
             />
           </div>
 
-          
           {error && <p className="text-sm text-red-500 text-center">{error}</p>}
 
-          
           <button
             type="submit"
             disabled={loading}
@@ -90,6 +84,16 @@ export default function Login() {
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
+
+        <p className="text-gray-400 text-center mt-4 text-sm">
+          New here?
+          <button
+            onClick={() => router.push("/register")}
+            className="text-blue-400 hover:text-blue-300 ml-1 underline underline-offset-2"
+          >
+            Create an account
+          </button>
+        </p>
       </div>
     </div>
   );

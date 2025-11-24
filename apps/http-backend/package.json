@@ -11,6 +11,7 @@
   "dependencies": {
     "@repo/backend-common": "workspace:*",
     "@repo/jwt-common": "workspace:*",
+    "@repo/jwt-ws": "workspace:*",
     "@repo/prisma": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/bcrypt": "^6.0.0",
@@ -18,11 +19,11 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
     "@types/jsonwebtoken": "^9.0.10",
-    "@repo/jwt-ws": "workspace:*",
     "bcrypt": "^6.0.0",
     "cookie": "^1.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2"
   },

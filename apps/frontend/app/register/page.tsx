@@ -8,7 +8,7 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState(""); 
+  const [avatarUrl, setAvatarUrl] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -20,12 +20,11 @@ export default function Register() {
     setError(null);
 
     try {
-      const res = await axios.post(`${BACKEND_URL}/user/register`, {
-        email,
-        password,
-        name,
-        avatarUrl, 
-      });
+      const res = await axios.post(
+        `${BACKEND_URL}/user/register`,
+        { email, password, name, avatarUrl },
+        { withCredentials: true }
+      );
 
       const wsToken = res.data.wsToken;
       localStorage.setItem("wsToken", wsToken);
@@ -34,7 +33,6 @@ export default function Register() {
         router.push("/rooms");
       }
     } catch (error: any) {
-      console.error(error.response?.data?.message);
       setError(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
@@ -49,7 +47,6 @@ export default function Register() {
         </h1>
 
         <form onSubmit={handleRegister} className="space-y-5">
-         
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
               Name
@@ -64,7 +61,6 @@ export default function Register() {
             />
           </div>
 
-         
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
               Email
@@ -79,7 +75,6 @@ export default function Register() {
             />
           </div>
 
-         
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
               Password
@@ -94,7 +89,6 @@ export default function Register() {
             />
           </div>
 
-          
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
               Avatar URL (optional)
@@ -118,6 +112,16 @@ export default function Register() {
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
+
+        <p className="text-gray-400 text-center mt-4 text-sm">
+          Already have an account?
+          <button
+            onClick={() => router.push("/login")}
+            className="text-blue-400 hover:text-blue-300 ml-1 underline underline-offset-2"
+          >
+            Login
+          </button>
+        </p>
       </div>
     </div>
   );
