@@ -9,12 +9,11 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white flex flex-col items-center justify-center px-6 md:px-12">
-      {/* Glow background */}
+
       <div className="absolute inset-0 flex justify-center items-center -z-10">
         <div className="w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[150px]" />
       </div>
 
-      {/* Hero Content */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -42,7 +41,7 @@ export default function LandingPage() {
         </motion.p>
       </motion.div>
 
-      {/* CTA Buttons */}
+   
       <motion.div
         className="flex flex-col sm:flex-row gap-4 mt-10"
         initial={{ opacity: 0 }}
@@ -64,14 +63,14 @@ export default function LandingPage() {
         </button>
       </motion.div>
 
-      {/* Features Section */}
+ 
       <motion.div
         className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-20 max-w-3xl"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8, duration: 0.8 }}
       >
-        {/* Feature 1 */}
+   
         <div className="bg-gray-900/40 p-6 rounded-xl border border-gray-700 backdrop-blur-md shadow-lg hover:scale-[1.02] transition">
           <MessageCircle className="h-10 w-10 text-blue-400" />
           <h3 className="text-xl font-semibold mt-3">Real-time Messaging</h3>
@@ -80,7 +79,7 @@ export default function LandingPage() {
           </p>
         </div>
 
-        {/* Feature 2 */}
+    
         <div className="bg-gray-900/40 p-6 rounded-xl border border-gray-700 backdrop-blur-md shadow-lg hover:scale-[1.02] transition">
           <Users className="h-10 w-10 text-purple-400" />
           <h3 className="text-xl font-semibold mt-3">Create & Join Rooms</h3>
@@ -90,7 +89,7 @@ export default function LandingPage() {
         </div>
       </motion.div>
 
-      {/* Footer */}
+    
       <motion.p
         className="text-gray-500 text-sm mt-16"
         initial={{ opacity: 0 }}
